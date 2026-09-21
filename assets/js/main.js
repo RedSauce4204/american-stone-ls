@@ -150,19 +150,47 @@
     document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeMenu(); });
   }
 
-  /* ---------- Custom cursor ---------- */
-  const cursor = $(".cursor");
-  if (cursor && finePointer && !reduced && hasGsap) {
-    const xTo = gsap.quickTo(cursor, "x", { duration: 0.18, ease: "power3" });
-    const yTo = gsap.quickTo(cursor, "y", { duration: 0.18, ease: "power3" });
-    window.addEventListener("mousemove", (e) => { xTo(e.clientX); yTo(e.clientY); }, { passive: true });
+  /* ---------- Trowel cursor + mortar trail ---------- */
+  const TROWEL = '<path d="M3 5l13 3.5L20 20 3 5z" fill="currentColor"/><path d="M17 17l9 9" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><path d="M24 24l4.5 4.5" stroke="#c4933c" stroke-width="4" stroke-linecap="round"/>';
+  // every arrow icon becomes a small trowel
+  $$(".arrow").forEach((svg) => { svg.setAttribute("viewBox", "0 0 32 32"); svg.removeAttribute("stroke"); svg.removeAttribute("fill"); svg.innerHTML = TROWEL; });
+  const cursor = $(".cursor"), mortar = $(".mortar");
+  if (cursor && mortar && finePointer && !reduced && hasGsap) {
+    document.documentElement.classList.add("has-trowel");
+    const label = $(".cursor-label", cursor);
+    const xTo = gsap.quickTo(cursor, "x", { duration: 0.12, ease: "power3" });
+    const yTo = gsap.quickTo(cursor, "y", { duration: 0.12, ease: "power3" });
+    const ctx = mortar.getContext("2d");
+    let blobs = [], last = { x: -1, y: -1 }, raf = null, dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const size = () => { mortar.width = innerWidth * dpr; mortar.height = innerHeight * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); };
+    size(); window.addEventListener("resize", size);
+    const add = (x, y, r, life) => { blobs.push({ x: x + (Math.random() - 0.5) * 6, y: y + (Math.random() - 0.5) * 6, r, born: performance.now(), life, a: Math.random() * Math.PI }); if (!raf) raf = requestAnimationFrame(draw); };
+    const draw = (now) => {
+      ctx.clearRect(0, 0, innerWidth, innerHeight);
+      blobs = blobs.filter((b) => now - b.born < b.life);
+      blobs.forEach((b) => {
+        const t = (now - b.born) / b.life, alpha = (1 - t) * 0.55, rr = b.r * (1 + t * 0.25);
+        ctx.beginPath(); ctx.ellipse(b.x, b.y, rr, rr * 0.72, b.a, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(140,132,118,${alpha})`; ctx.fill();
+      });
+      raf = blobs.length ? requestAnimationFrame(draw) : null;
+    };
+    window.addEventListener("mousemove", (e) => {
+      xTo(e.clientX); yTo(e.clientY);
+      const d = Math.hypot(e.clientX - last.x, e.clientY - last.y);
+      if (d > 7) { add(e.clientX - 2, e.clientY - 2, 4 + Math.min(d, 40) * 0.18, 900); last = { x: e.clientX, y: e.clientY }; }
+    }, { passive: true });
+    window.addEventListener("mousedown", (e) => { cursor.classList.add("is-down"); for (let i = 0; i < 9; i++) add(e.clientX + (Math.random() - 0.5) * 34, e.clientY + (Math.random() - 0.5) * 34, 5 + Math.random() * 9, 1400 + Math.random() * 600); });
+    window.addEventListener("mouseup", () => cursor.classList.remove("is-down"));
     document.addEventListener("mouseover", (e) => {
       const view = e.target.closest("[data-cursor]");
-      const link = e.target.closest("a, button, summary, input[type=range]");
+      const link = e.target.closest("a, button, summary, input[type=range], [role=button]");
       cursor.classList.toggle("is-view", !!view);
-      if (view) cursor.dataset.label = view.dataset.cursor || "View";
-      cursor.classList.toggle("is-link", !!link && !view);
+      if (view) label.textContent = view.dataset.cursor || "View";
+      cursor.classList.toggle("is-link", !!link);
     });
+    document.addEventListener("mouseleave", () => { cursor.style.opacity = 0; });
+    document.addEventListener("mouseenter", () => { cursor.style.opacity = 1; });
   }
 
   /* ---------- Scroll reveals ---------- */

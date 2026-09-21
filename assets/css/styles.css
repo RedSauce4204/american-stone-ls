@@ -102,9 +102,9 @@ main > .section:not(.cta)::before { counter-increment: sec; content: "No. 0" cou
 @media (max-width: 640px) { .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; } }
 
 /* ---------- Buttons: cut from the wall ---------- */
-.btn { position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 12px; padding: 19px 30px; font-family: var(--font-mono); font-size: 0.82rem; font-weight: 500; color: var(--chalk); text-shadow: 0 1px 2px rgba(0,0,0,0.85), 0 0 10px rgba(0,0,0,0.5); background: #8f8676; clip-path: polygon(2% 12%, 9% 0, 62% 3%, 96% 0, 100% 40%, 98% 100%, 55% 96%, 8% 100%, 0 78%); isolation: isolate; white-space: nowrap; transition: transform 0.35s var(--ease-out), filter 0.35s; }
+.btn { position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 12px; padding: 19px 30px; font-family: var(--font-mono); font-size: 0.82rem; font-weight: 500; color: var(--chalk); text-shadow: 0 1px 2px rgba(0,0,0,0.7); background: #8f8676; clip-path: polygon(2% 12%, 9% 0, 62% 3%, 96% 0, 100% 40%, 98% 100%, 55% 96%, 8% 100%, 0 78%); isolation: isolate; white-space: nowrap; transition: transform 0.35s var(--ease-out), filter 0.35s; }
 .btn::before { content: ""; position: absolute; inset: 3px; z-index: -1; background: var(--stone-tex, url("../img/ui/stone-warm.jpg")) center / cover; clip-path: polygon(2% 12%, 9% 0, 62% 3%, 96% 0, 100% 40%, 98% 100%, 55% 96%, 8% 100%, 0 78%); transition: filter 0.35s; }
-.btn::after { content: ""; position: absolute; inset: 3px; z-index: -1; clip-path: polygon(2% 12%, 9% 0, 62% 3%, 96% 0, 100% 40%, 98% 100%, 55% 96%, 8% 100%, 0 78%); background: linear-gradient(160deg, rgba(255,255,255,0.16), rgba(0,0,0,0.12) 40%, rgba(0,0,0,0.45)); pointer-events: none; }
+.btn::after { content: ""; position: absolute; inset: 3px; z-index: -1; clip-path: polygon(2% 12%, 9% 0, 62% 3%, 96% 0, 100% 40%, 98% 100%, 55% 96%, 8% 100%, 0 78%); background: linear-gradient(160deg, rgba(255,255,255,0.22), rgba(0,0,0,0) 45%, rgba(0,0,0,0.38)); pointer-events: none; }
 .btn:hover { transform: translateY(-2px); }
 .btn:hover::before, .btn:focus-visible::before { filter: brightness(1.18) saturate(1.1); }
 .btn .arrow { width: 18px; height: 18px; transition: transform 0.35s var(--ease-out); filter: drop-shadow(0 1px 1px rgba(0,0,0,0.5)); }
@@ -168,13 +168,13 @@ body.menu-open { overflow: hidden; }
 .loader.is-done { display: none; }
 
 /* ---------- Trowel cursor + mortar trail ---------- */
-.cursor { position: fixed; top: 0; left: 0; z-index: 9995; pointer-events: none; width: 42px; height: 42px; color: #e9e3d5; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.45)); transform: translate(-4px, -4px); transition: transform 0.25s var(--ease-out); display: none; }
+.cursor { position: fixed; top: 0; left: 0; z-index: 9995; pointer-events: none; width: 42px; height: 42px; color: #e9e3d5; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.45)); display: none; }
 .cursor svg { width: 100%; height: 100%; transform: rotate(-20deg); transition: transform 0.3s var(--ease-out); }
 .cursor.is-link svg { transform: rotate(-38deg) scale(1.15); }
 .cursor.is-down svg { transform: rotate(-55deg) scale(0.95); }
 .cursor .cursor-label { position: absolute; left: 36px; top: 4px; padding: 6px 9px; background: var(--rosso); color: var(--chalk); font-family: var(--font-mono); font-size: 0.66rem; white-space: nowrap; opacity: 0; transform: translateX(-6px); transition: opacity 0.25s, transform 0.25s; }
 .cursor.is-view .cursor-label { opacity: 1; transform: none; }
-.mortar { position: fixed; inset: 0; z-index: 9994; pointer-events: none; display: none; }
+.mortar { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 9994; pointer-events: none; display: none; }
 @media (pointer: fine) { html.has-trowel, html.has-trowel a, html.has-trowel button, html.has-trowel summary, html.has-trowel input, html.has-trowel textarea, html.has-trowel select, html.has-trowel [role=button] { cursor: none; } html.has-trowel .cursor, html.has-trowel .mortar { display: block; } }
 
 /* ---------- Hero ---------- */

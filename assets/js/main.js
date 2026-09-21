@@ -162,7 +162,7 @@
     const yTo = gsap.quickTo(cursor, "y", { duration: 0.12, ease: "power3" });
     const ctx = mortar.getContext("2d");
     let blobs = [], last = { x: -1, y: -1 }, raf = null, dpr = Math.min(window.devicePixelRatio || 1, 2);
-    const size = () => { mortar.width = innerWidth * dpr; mortar.height = innerHeight * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); };
+    const size = () => { mortar.width = innerWidth * dpr; mortar.height = innerHeight * dpr; mortar.style.width = innerWidth + "px"; mortar.style.height = innerHeight + "px"; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); };
     size(); window.addEventListener("resize", size);
     const add = (x, y, r, life) => { blobs.push({ x: x + (Math.random() - 0.5) * 6, y: y + (Math.random() - 0.5) * 6, r, born: performance.now(), life, a: Math.random() * Math.PI }); if (!raf) raf = requestAnimationFrame(draw); };
     const draw = (now) => {
@@ -178,7 +178,7 @@
     window.addEventListener("mousemove", (e) => {
       xTo(e.clientX); yTo(e.clientY);
       const d = Math.hypot(e.clientX - last.x, e.clientY - last.y);
-      if (d > 7) { add(e.clientX - 2, e.clientY - 2, 4 + Math.min(d, 40) * 0.18, 900); last = { x: e.clientX, y: e.clientY }; }
+      if (d > 7) { add(e.clientX + 4, e.clientY + 4, 4 + Math.min(d, 40) * 0.18, 900); last = { x: e.clientX, y: e.clientY }; }
     }, { passive: true });
     window.addEventListener("mousedown", (e) => { cursor.classList.add("is-down"); for (let i = 0; i < 9; i++) add(e.clientX + (Math.random() - 0.5) * 34, e.clientY + (Math.random() - 0.5) * 34, 5 + Math.random() * 9, 1400 + Math.random() * 600); });
     window.addEventListener("mouseup", () => cursor.classList.remove("is-down"));
